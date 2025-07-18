@@ -1,0 +1,44 @@
+# JetBrains Rider/IntelliJ
+.idea/
+
+### .NET ###
+*.suo
+*.user
+*.sln.docstates
+
+# Folders
+[Bb]in/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Oo]bj/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+
+# Secrets
+secrets.json
+appsettings.Development.json
+
+### Node.js ###
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Next.js build folder
+.next/
+out/
+
+# Other
+.DS_Store
+
