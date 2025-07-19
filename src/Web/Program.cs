@@ -1,41 +1,44 @@
+using Infrastructure; // Add this using statement
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// This call scans the Infrastructure project and registers the DbContext
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// We still need to add Controllers to the service collection
+builder.Services.AddControllers();
+
+// Add CORS policy from our previous step
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNextJs", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// --- Configure the HTTP request pipeline ---
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // In development, you might want Swagger for API testing
+    // builder.Services.AddEndpointsApiExplorer();
+    // builder.Services.AddSwaggerGen();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseCors("AllowNextJs"); // Use the CORS policy
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseAuthorization();
+
+app.MapControllers(); // This maps the routes from your Controller files
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
