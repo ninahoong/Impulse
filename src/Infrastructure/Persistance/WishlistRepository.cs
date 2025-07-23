@@ -24,4 +24,19 @@ public class WishlistRepository : IWishlistRepository
         _context.WishlistItems.Add(item);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<WishlistItem?> GetByIdAsync(int id)
+    {
+        return await _context.WishlistItems.FindAsync(id);
+    }
+    
+    public async Task DeleteAsync(int id)
+    {
+        var itemToDelete = await _context.WishlistItems.FindAsync(id);
+        if (itemToDelete != null)
+        {
+            _context.WishlistItems.Remove(itemToDelete);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

@@ -28,4 +28,17 @@ export const wishlistService = {
             return null;
         }
     },
+
+    async deleteItem(id: number) {
+        try {
+            const res = await fetch(`${API_BASE_URL}/wishlist/${id}`, {
+                method: 'DELETE',
+            });
+            // res.ok will be true for any 2xx status, including 204 No Content.
+            return res.ok;
+        } catch (error) {
+            console.error('Error in wishlistService.deleteItem:', error);
+            return false;
+        }
+    },
 };

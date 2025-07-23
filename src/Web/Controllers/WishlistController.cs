@@ -39,4 +39,20 @@ public class WishlistController : ControllerBase
         // Return a "Created" response with the new item
         return CreatedAtAction(nameof(GetWishlistItems), new { id = newItem.Id }, newItem);
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteWishlistItem(int id)
+    {
+        var item = await _wishlistRepository.GetByIdAsync(id);
+        if (item == null)
+        {
+            // If the item doesn't exist, return a 404 Not Found response.
+            return NotFound();
+        }
+
+        await _wishlistRepository.DeleteAsync(id);
+
+        // Return a 204 No Content response, which is standard for a successful delete.
+        return NoContent();
+    }
 }
