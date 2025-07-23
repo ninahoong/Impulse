@@ -17,4 +17,11 @@ public class WishlistRepository : IWishlistRepository
     {
         return await _context.WishlistItems.ToListAsync();
     }
+    
+    public async Task AddAsync(WishlistItem item)
+    {
+        item.DateAdded = DateTime.UtcNow; // Set the date when adding
+        _context.WishlistItems.Add(item);
+        await _context.SaveChangesAsync();
+    }
 }
