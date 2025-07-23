@@ -1,7 +1,4 @@
 async function getWishlistItems() {
-  // We fetch data from our .NET backend.
-  // Make sure your .NET API is running!
-  // The port (e.g., 7123) might be different for you. Check the Rider console.
   const res = await fetch('http://localhost:5298/api/wishlist', {
     cache: 'no-store' // Disables caching for development
   });
@@ -13,7 +10,7 @@ async function getWishlistItems() {
   return res.json();
 }
 
-// Define a type for our item to use in the component
+// Defining type for item
 type WishlistItem = {
   id: number;
   itemName: string;
