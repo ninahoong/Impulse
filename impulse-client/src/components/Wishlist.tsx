@@ -55,17 +55,18 @@ export default function Wishlist() {
                             View Product
                         </a>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
                         <Link href={`/edit/${item.id}`} className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 text-start">
                             Edit
                         </Link>
+                        <button
+                            onClick={() => handleDelete(item.id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 self-start"
+                        >
+                            Delete
+                        </button>
                     </div>
-                    <button
-                        onClick={() => handleDelete(item.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 self-start"
-                    >
-                        Delete
-                    </button>
+
                 </div>
             ))}
         </div>
