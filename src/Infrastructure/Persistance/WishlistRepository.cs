@@ -20,7 +20,7 @@ public class WishlistRepository : IWishlistRepository
     
     public async Task AddAsync(WishlistItem item)
     {
-        item.DateAdded = DateTime.UtcNow; // Set the date when adding
+        item.DateAdded = DateTime.UtcNow; 
         _context.WishlistItems.Add(item);
         await _context.SaveChangesAsync();
     }
@@ -36,6 +36,22 @@ public class WishlistRepository : IWishlistRepository
         if (itemToDelete != null)
         {
             _context.WishlistItems.Remove(itemToDelete);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task UpdateAsync(WishlistItem updatedItem)
+    {
+        var existingItem = await _context.WishlistItems.FindAsync(updatedItem.Id);
+        
+        if (existingItem != null)
+        {
+            existingItem.ItemName = updatedItem.ItemName;
+            existingItem.Price = updatedItem.Price;
+            existingItem.Currency = updatedItem.Currency;
+            existingItem.ProductUrl = updatedItem.ProductUrl;
+            existingItem.ImageUrl = updatedItem.ImageUrl;
+            
             await _context.SaveChangesAsync();
         }
     }

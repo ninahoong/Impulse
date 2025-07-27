@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { wishlistService } from '@/services/wishlistService';
+import Link from "next/link";
 
 // Define the type here as this component "owns" the data
 type WishlistItem = {
@@ -32,7 +33,6 @@ export default function Wishlist() {
     const handleDelete = async (id: number) => {
         const success = await wishlistService.deleteItem(id);
         if (success) {
-            // To update the UI instantly, filter the deleted item out of the local state.
             setItems(currentItems => currentItems.filter(item => item.id !== id));
         } else {
             alert('Failed to delete item.');
@@ -55,7 +55,11 @@ export default function Wishlist() {
                             View Product
                         </a>
                     </div>
-                    {/* --- THE DELETE BUTTON --- */}
+                    <div className="flex flex-col gap-2">
+                        <Link href={`/edit/${item.id}`} className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 text-start">
+                            Edit
+                        </Link>
+                    </div>
                     <button
                         onClick={() => handleDelete(item.id)}
                         className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 self-start"

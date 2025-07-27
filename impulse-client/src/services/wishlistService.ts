@@ -5,7 +5,7 @@ type NewWishlistItem = {
     price: number;
     productUrl: string;
     currency: string;
-    imageUrl?: string; //Optional imange
+    imageUrl?: string;
 };
 
 export const wishlistService = {
@@ -34,10 +34,25 @@ export const wishlistService = {
             const res = await fetch(`${API_BASE_URL}/wishlist/${id}`, {
                 method: 'DELETE',
             });
-            // res.ok will be true for any 2xx status, including 204 No Content.
             return res.ok;
         } catch (error) {
             console.error('Error in wishlistService.deleteItem:', error);
+            return false;
+        }
+    },
+
+    async updateItem(id: number, item: any) {
+        try {
+            const res = await fetch(`${API_BASE_URL}/wishlist/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(item),
+            });
+            return res.ok;
+        } catch (error) {
+            console.error('Error in wishlistService.updateItem:', error);
             return false;
         }
     },

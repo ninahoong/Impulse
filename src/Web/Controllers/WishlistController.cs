@@ -55,4 +55,39 @@ public class WishlistController : ControllerBase
         // Return a 204 No Content response, which is standard for a successful delete.
         return NoContent();
     }
+    
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateWishlistItem(int id, [FromBody] WishlistItem updatedItem)
+    {
+        // Check if the provided ID matches the ID in the item's data.
+        if (id != updatedItem.Id)
+        {
+            return BadRequest("ID mismatch.");
+        }
+
+        // Check if the item exists before trying to update it.
+        var existingItem = await _wishlistRepository.GetByIdAsync(id);
+        if (existingItem == null)
+        {
+            return NotFound();
+        }
+
+        await _wishlistRepository.UpdateAsync(updatedItem);
+
+        // Return a 204 No Content response, standard for a successful update.
+        return NoContent();
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<WishlistItem>> GetWishlistItem(int id)
+    {
+        var item = await _wishlistRepository.GetByIdAsync(id);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(item);
+    }
 }

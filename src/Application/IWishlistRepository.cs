@@ -8,4 +8,5 @@ public interface IWishlistRepository
     Task AddAsync(WishlistItem item); 
     Task<WishlistItem?> GetByIdAsync(int id); 
     Task DeleteAsync(int id);
+    Task  UpdateAsync(WishlistItem item);
 }
