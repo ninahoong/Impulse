@@ -9,7 +9,7 @@ async function getWishlistItem(id: string) {
     return res.json();
 }
 
-export default async function EditPage(props: { params: { id: string } }) {
+export default async function Page(props: { params: { id: string } }) {
     const { params } = props;
 
     const item = await getWishlistItem(params.id);
