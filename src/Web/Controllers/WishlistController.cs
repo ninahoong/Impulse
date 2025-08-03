@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application;
 using Microsoft.AspNetCore.Authorization;
 
@@ -22,8 +23,13 @@ public class WishlistController : ControllerBase
     [HttpGet]
     public async Task<List<WishlistItem>> GetWishlistItems()
     {
-        Console.WriteLine("WishlistController::GetWishlistItems()");
-        var items = await _wishlistRepository.GetAllAsync();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return new List<WishlistItem>();
+        }
+        
+        var items = await _wishlistRepository.GetAllForUserAsync(userId);
         return items;
     }
     
@@ -35,10 +41,15 @@ public class WishlistController : ControllerBase
             return BadRequest(ModelState);
         }
     
-        // Use the repository to add the new item and save changes
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+        newItem.UserId = userId;
+    
         await _wishlistRepository.AddAsync(newItem);
-
-        // Return a "Created" response with the new item
+        
         return CreatedAtAction(nameof(GetWishlistItems), new { id = newItem.Id }, newItem);
     }
     
@@ -48,26 +59,22 @@ public class WishlistController : ControllerBase
         var item = await _wishlistRepository.GetByIdAsync(id);
         if (item == null)
         {
-            // If the item doesn't exist, return a 404 Not Found response.
             return NotFound();
         }
 
         await _wishlistRepository.DeleteAsync(id);
-
-        // Return a 204 No Content response, which is standard for a successful delete.
+        
         return NoContent();
     }
     
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateWishlistItem(int id, [FromBody] WishlistItem updatedItem)
     {
-        // Check if the provided ID matches the ID in the item's data.
         if (id != updatedItem.Id)
         {
             return BadRequest("ID mismatch.");
         }
-
-        // Check if the item exists before trying to update it.
+        
         var existingItem = await _wishlistRepository.GetByIdAsync(id);
         if (existingItem == null)
         {
@@ -75,8 +82,7 @@ public class WishlistController : ControllerBase
         }
 
         await _wishlistRepository.UpdateAsync(updatedItem);
-
-        // Return a 204 No Content response, standard for a successful update.
+        
         return NoContent();
     }
     

@@ -2,6 +2,7 @@ namespace Domain;
 
 public class WishlistItem
 {
+    public required string UserId { get; set; } 
     public int Id { get; set; }
     public required string ItemName { get; set; }
     public decimal Price { get; set; }

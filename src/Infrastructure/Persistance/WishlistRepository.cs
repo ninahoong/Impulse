@@ -13,9 +13,11 @@ public class WishlistRepository : IWishlistRepository
         _context = context;
     }
 
-    public async Task<List<WishlistItem>> GetAllAsync()
+    public async Task<List<WishlistItem>> GetAllForUserAsync(string userId)
     {
-        return await _context.WishlistItems.ToListAsync();
+        return await _context.WishlistItems
+            .Where(item => item.UserId == userId) 
+            .ToListAsync();
     }
     
     public async Task AddAsync(WishlistItem item)
