@@ -1,4 +1,5 @@
 using Application;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers;
 
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class WishlistController : ControllerBase
 {
     private readonly IWishlistRepository _wishlistRepository;

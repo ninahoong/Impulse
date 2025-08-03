@@ -18,16 +18,30 @@ type WishlistItem = {
 export default function Wishlist() {
     const [items, setItems] = useState<WishlistItem[]>([]);
 
-    // Fetch data on the client side when the component loads
     useEffect(() => {
         async function getWishlistItems() {
-            const res = await fetch('http://localhost:5298/api/wishlist');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Optional: Redirect to login or handle not being logged in
+                return;
+            }
+
+            const res = await fetch('http://localhost:5298/api/wishlist', {
+                // --- ADD THESE HEADERS ---
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
             if (res.ok) {
                 setItems(await res.json());
+            } else {
+                // Handle unauthorized or other errors, e.g., redirect to login
+                console.error("Failed to fetch wishlist, user might be unauthorized.");
             }
         }
         getWishlistItems();
-    }, []); // The empty array ensures this runs only once on mount
+    }, []);
 
     // Handle the delete button click
     const handleDelete = async (id: number) => {
